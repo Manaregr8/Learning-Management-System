@@ -1,8 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager 
+from django.core.exceptions import ValidationError
 
 class Role(models.Model):
+
+    ALLOWED_ROLES = ['admin', 'trainer', 'student']
+
     name = models.CharField(max_length=50, unique=True)
+    
+    def clean(self):
+        if self.name.lower() not in self.ALLOWED_ROLES:
+            raise ValidationError(f"Invalid role name. Must be one of {self.ALLOWED_ROLES}.")
 
     def __str__(self):
         return self.name
@@ -27,7 +35,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
-    password_hash = models.TextField()
+    # password_hash = models.TextField()
     role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -41,8 +49,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
     def save(self, *args, **kwargs):
-        if not self.password_hash:
-            self.set_password(self.password)
         super().save(*args, **kwargs)
 
     def __str__(self):
