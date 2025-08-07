@@ -1,0 +1,5 @@
+venv_lms/
+venv/
+__pycache__/
+**/__pycache__/
+*.pyc
