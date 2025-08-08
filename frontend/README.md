@@ -2,8 +2,24 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, install related modules:
+```bash
+npm install
+```
+Than create a .env.local file with your keys and secrets like this ->
+```bash
+AUTH0_SECRET= your_secret that you will get once runnning below command in the terminal.
+AUTH0_BASE_URL=http://localhost:3000.
+AUTH0_ISSUER_BASE_URL= your base url from AUTH0 dashboard
+AUTH0_CLIENT_ID= your Client ID from AUTH0 dashboard
+AUTH0_CLIENT_SECRET= your Client Secret from AUTH0 dashboard
+```
+To get Your AUTH0_SECRET run below command in your terminal
+```bash
+openssl rand -hex 32
+```
 
+Than start development server By running beow commands
 ```bash
 npm run dev
 # or
@@ -15,14 +31,3 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-but before that create a .env.local file with your keys and secrets like this ->
-
-AUTH0_SECRET= your_secret that you will get once runnning below command in the terminal.
-```bash
-openssl rand -hex 32
-```
-AUTH0_BASE_URL=http://localhost:3000
-AUTH0_ISSUER_BASE_URL= your base url from AUTH0 dashboard
-AUTH0_CLIENT_ID= your Client ID from AUTH0 dashboard
-AUTH0_CLIENT_SECRET= your Client Secret from AUTH0 dashboard
