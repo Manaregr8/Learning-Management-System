@@ -17,20 +17,22 @@ class LoginView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = authenticate(email=serializer.validated_data['email'], password=serializer.validated_data['password'])
-
-        if user:
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'role': user.role.name
-            })
-        return Response({'error': 'Invalid Credentials'}, status=401)
+        
+        if not user:
+            return Response({'error':'invalid creds'}, status=401)
+        
+        refresh = RefreshToken.for_user(user)
+        
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'role': getattr(user, 'role', None) or ("superuser" if user.is_superuser else None)
+        })
 
 # Admin-only Registration View
 class RegisterUserView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
-    permission_classes = [IsAdminUserOnly]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
     def perform_create(self, serializer):
         serializer.save()
