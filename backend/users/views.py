@@ -1,12 +1,14 @@
 from rest_framework import generics, permissions
+from rest_framework.generics import RetrieveAPIView
 from .models import CustomUser, Role
-from .serializers import RegisterSerializer, LoginSerializer
+from .serializers import *
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from .permissions import IsAdminUserOnly
 # Login View
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
@@ -28,17 +30,18 @@ class LoginView(generics.GenericAPIView):
 # Admin-only Registration View
 class RegisterUserView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAdminUserOnly]
 
     def perform_create(self, serializer):
         serializer.save()
 
-class CheckUserRoleView(APIView):
-    permission_classes = [IsAuthenticated]
+class UserListView(generics.ListAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = SafeUserSerializer
+    permission_classes = [IsAdminUserOnly]
 
-    def get(self, request):
-        return Response({
-            'username': request.user.username,
-            'email': request.user.email,
-            'role': request.user.role.name
-        })
+class UserDetailView(RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = SafeUserSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'username'

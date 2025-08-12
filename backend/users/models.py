@@ -22,6 +22,10 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, role=role)
         user.set_password(password)
+    
+        if role and role.name.lower() == 'admin':
+            user.is_staff = True
+
         user.save(using=self._db)
         return user
 
@@ -43,10 +47,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
 
     objects = CustomUserManager()
-
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
-
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
