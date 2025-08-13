@@ -26,7 +26,7 @@ class LoginView(generics.GenericAPIView):
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-            'role': getattr(user, 'role', None) or ("superuser" if user.is_superuser else None)
+            'role': getattr(user, 'name', None) or ("superuser" if user.is_superuser else None)
         })
 
 # Admin-only Registration View
