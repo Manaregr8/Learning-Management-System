@@ -10,4 +10,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+class ModuleViewSet(viewsets.ModelViewSet):
+    queryset = Modules.objects.all()
+    
 # Create your views here.

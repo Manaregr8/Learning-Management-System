@@ -1,10 +1,14 @@
 from django.db import models
 from users.models import CustomUser
+from django.core.exceptions import ValidationError
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     
+    @property
+    def all_lessons(self):
+        return Lessons.objects.filter(module__category = self)
 
     def __str__(self):
         return self.name
@@ -26,3 +30,29 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} enrolled in {self.category.name}"
+
+class Modules(models.Model):
+    courses = models.ManyToManyField(Course, related_name="module")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="module")
+    name = models.CharField(max_length=100)
+    
+    def clean(self):
+        if not self.pk:
+            return
+        for course in self.courses.all():
+            if course.category != self.category:
+                raise ValidationError(
+                    f"Course '{course.name}' is not in the same category as the module '{self.name}'"
+                )
+
+    def __str__(self):
+        return f"{self.name} of ({self.category.name})"
+    
+class Lessons(models.Model):
+    module = models.ForeignKey(Modules, on_delete=models.CASCADE, related_name="lesson")
+    name = models.CharField(max_length=100)
+    content = models.TextField()
+
+    def __str__(self):
+        return f"{self.name} in ({self.module.name})"
+
