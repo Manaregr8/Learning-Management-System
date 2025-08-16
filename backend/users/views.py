@@ -46,4 +46,4 @@ class UserDetailView(RetrieveAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = SafeUserSerializer
     permission_classes = [IsAuthenticated]
-    lookup_field = 'username'
+    lookup_field = 'email'
