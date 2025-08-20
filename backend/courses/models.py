@@ -52,6 +52,7 @@ class Lessons(models.Model):
     module = models.ForeignKey(Modules, on_delete=models.CASCADE, related_name="lesson")
     name = models.CharField(max_length=100)
     content = models.TextField()
+    video = models.FileField(upload_to="lesson_videos/", blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} in ({self.module.name})"
