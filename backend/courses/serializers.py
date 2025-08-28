@@ -1,10 +1,26 @@
 from rest_framework import serializers
 from .models import *
 
+class LessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lessons
+        fields = ['id', 'module', 'name', 'content', 'video']
+
+
+class ModuleSerializer(serializers.ModelSerializer):
+    lessons = LessonSerializer(many=True, read_only=True)
+    courses = serializers.PrimaryKeyRelatedField(many=True, queryset = Course.objects.all())
+
+    class Meta:
+        model = Modules
+        fields = ['id', 'name', 'category', 'courses', 'lessons']
+
 class CourseSerializer(serializers.ModelSerializer):
+    modules = ModuleSerializer(many=True, read_only=True)
+
     class Meta:
         model = Course
-        fields = ['id', 'name', 'category', 'price', 'duration_weeks', 'description']
+        fields = ['id', 'name', 'category', 'price', 'duration_weeks', 'description', 'modules']
 
 class CategorySerializer(serializers.ModelSerializer):
     courses = CourseSerializer(many=True, read_only=True)
@@ -26,3 +42,4 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         model = Enrollment
         fields = ['id', 'user', 'category', 'category_id', 'enrolled_at']
 
+    
