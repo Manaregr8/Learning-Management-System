@@ -17,10 +17,10 @@ class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = [isAuthenticatedGetAndAdminPost]
 
     @action(detail=True, methods=['get'])
-    def modules(self, request, pk=None):
+    def batches(self, request, pk=None):
         course = self.get_object()
         modules = course.module.all()
-        serializer = ModuleSerializer(modules, many=True)
+        serializer = BatchSerializer(modules, many=True)
         return Response(serializer.data)
     
     @action(detail=True, methods=['get'])

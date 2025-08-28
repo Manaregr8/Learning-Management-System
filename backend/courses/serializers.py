@@ -7,16 +7,16 @@ class LessonSerializer(serializers.ModelSerializer):
         fields = ['id', 'module', 'name', 'content', 'video']
 
 
-class ModuleSerializer(serializers.ModelSerializer):
+class BatchSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(many=True, read_only=True)
     courses = serializers.PrimaryKeyRelatedField(many=True, queryset = Course.objects.all())
 
     class Meta:
-        model = Modules
+        model = Batch
         fields = ['id', 'name', 'category', 'courses', 'lessons']
 
 class CourseSerializer(serializers.ModelSerializer):
-    modules = ModuleSerializer(many=True, read_only=True)
+    modules = BatchSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
