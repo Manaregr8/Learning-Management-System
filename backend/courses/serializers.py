@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import *
 
 class LessonSerializer(serializers.ModelSerializer):
-    video = serializers.FileField(use_url=True)
+    # video = serializers.FileField(use_url=True)
     class Meta:
         model = Lessons
         fields = ['id', 'batch', 'name', 'content', 'video']
