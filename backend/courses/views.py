@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework import viewsets, permissions
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from .models import *
 from .serializers import *
 from .permissions import *
+import requests
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -17,17 +18,32 @@ class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = [isAuthenticatedGetAndAdminPost]
 
     @action(detail=True, methods=['get'])
-    def modules(self, request, pk=None):
+    def batches(self, request, pk=None):
         course = self.get_object()
-        modules = course.module.all()
-        serializer = ModuleSerializer(modules, many=True)
+        batches = course.batch.all()
+        serializer = BatchSerializer(batches, many=True)
         return Response(serializer.data)
     
     @action(detail=True, methods=['get'])
     def lessons(self, request, pk=None):
         course = self.get_object()
-        lessons = Lessons.objects.filter(module__courses=course)
+        lessons = Lessons.objects.filter(batch__courses=course)
         serializer = LessonSerializer(lessons, many=True)
         return Response(serializer.data)
 
 
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def get_video_otp(request):
+    video_id = request.data.get("video_id")
+    url = f"https://dev.vdocipher.com/api/videos/{video_id}/otp"
+    payload = {
+        "ttl": 300
+    }
+    headers = {
+        "Authorization": "Apisecret" + " Vv0DEcgDDbYgPpnZ8son77sBsmjbrUOGxUbCrhHItG8b8nWbB9lBjaFuXG8ecVzw",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(url,json=payload, headers=headers)
+    return Response(response.json())

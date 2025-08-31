@@ -2,21 +2,22 @@ from rest_framework import serializers
 from .models import *
 
 class LessonSerializer(serializers.ModelSerializer):
+    video = serializers.FileField(use_url=True)
     class Meta:
         model = Lessons
-        fields = ['id', 'module', 'name', 'content', 'video']
+        fields = ['id', 'batch', 'name', 'content', 'video']
 
 
-class ModuleSerializer(serializers.ModelSerializer):
+class BatchSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(many=True, read_only=True)
     courses = serializers.PrimaryKeyRelatedField(many=True, queryset = Course.objects.all())
 
     class Meta:
-        model = Modules
+        model = Batch
         fields = ['id', 'name', 'category', 'courses', 'lessons']
 
 class CourseSerializer(serializers.ModelSerializer):
-    modules = ModuleSerializer(many=True, read_only=True)
+    modules = BatchSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course

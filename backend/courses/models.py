@@ -31,9 +31,9 @@ class Enrollment(models.Model):
     def __str__(self):
         return f"{self.user.username} enrolled in {self.category.name}"
 
-class Modules(models.Model):
-    courses = models.ManyToManyField(Course, related_name="module")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="module")
+class Batch(models.Model):
+    courses = models.ManyToManyField(Course, related_name="batch")
+    category = models.ForeignKey(Category,on_delete=models.CASCADE, related_name="batch", null=True)
     name = models.CharField(max_length=100)
     
     def clean(self):
@@ -42,18 +42,18 @@ class Modules(models.Model):
         for course in self.courses.all():
             if course.category != self.category:
                 raise ValidationError(
-                    f"Course '{course.name}' is not in the same category as the module '{self.name}'"
+                    f"Course '{course.name}' is not in the same category as the batch '{self.name}'"
                 )
 
     def __str__(self):
         return f"{self.name} of ({self.category.name})"
     
 class Lessons(models.Model):
-    module = models.ForeignKey(Modules, on_delete=models.CASCADE, related_name="lesson")
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name="lesson")
     name = models.CharField(max_length=100)
     content = models.TextField()
-    video = models.FileField(upload_to="lesson_videos/", blank=True, null=True)
+    video_id = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name} in ({self.module.name})"
+        return f"{self.name} in ({self.batch.name})"
 
