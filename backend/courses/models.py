@@ -49,11 +49,11 @@ class Batch(models.Model):
         return f"{self.name} of ({self.category.name})"
     
 class Lessons(models.Model):
-    module = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name="lesson")
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name="lesson")
     name = models.CharField(max_length=100)
     content = models.TextField()
     video = models.FileField(upload_to="lesson_videos/", blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name} in ({self.module.name})"
+        return f"{self.name} in ({self.batch.name})"
 

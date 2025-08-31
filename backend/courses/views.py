@@ -19,14 +19,14 @@ class CourseViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def batches(self, request, pk=None):
         course = self.get_object()
-        modules = course.module.all()
-        serializer = BatchSerializer(modules, many=True)
+        batches = course.batch.all()
+        serializer = BatchSerializer(batches, many=True)
         return Response(serializer.data)
     
     @action(detail=True, methods=['get'])
     def lessons(self, request, pk=None):
         course = self.get_object()
-        lessons = Lessons.objects.filter(module__courses=course)
+        lessons = Lessons.objects.filter(batch__courses=course)
         serializer = LessonSerializer(lessons, many=True)
         return Response(serializer.data)
 

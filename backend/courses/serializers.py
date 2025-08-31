@@ -4,7 +4,7 @@ from .models import *
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lessons
-        fields = ['id', 'module', 'name', 'content', 'video']
+        fields = ['id', 'batch', 'name', 'content', 'video']
 
 
 class BatchSerializer(serializers.ModelSerializer):
