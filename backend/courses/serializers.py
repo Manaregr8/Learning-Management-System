@@ -5,7 +5,7 @@ class LessonSerializer(serializers.ModelSerializer):
     # video = serializers.FileField(use_url=True)
     class Meta:
         model = Lessons
-        fields = ['id', 'batch', 'name', 'content', 'video']
+        fields = ['id', 'batch', 'name', 'content', 'video_id']
 
 
 class BatchSerializer(serializers.ModelSerializer):
