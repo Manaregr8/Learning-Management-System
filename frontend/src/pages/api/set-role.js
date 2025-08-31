@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   const { access, refresh } = await backendLogin(user.email, user.sub);
 
   const { res: roleRes } = await fetchWithRefresh(
-    `http://127.0.0.1:8000/api/users/sudent1/`,
+    `http://127.0.0.1:8000/api/users/${user.email}/`,
     access,
     refresh
   );
