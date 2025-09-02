@@ -29,6 +29,11 @@ export default function DashboardContent() {
   return (
     <div className={styles.dashboardContainer}>
       <div className={styles.dashboardHeader}>
+          <img 
+    src="/g109-8.png" 
+    alt="Company Logo" 
+    className={styles.logo}
+  />
         <div>
           <h1 className={styles.welcomeHeading}>
             Welcome,{" "}
