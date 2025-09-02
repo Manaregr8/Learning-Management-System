@@ -8,4 +8,5 @@ router.register(r'courses', CourseViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    # path('videos/get-otp/', get_video_otp, name='get_video_otp'),
 ]
